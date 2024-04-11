@@ -17,6 +17,9 @@ app.get('/scienceQuestions', (req, res) => {
 app.get('/', (req, res) => {
     res.send('Welcome to the Trivia API!');
 });
+app.use("*", (req, res) => {
+    res.send("Error 404: Page not found");
+});
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 })
