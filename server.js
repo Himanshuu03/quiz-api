@@ -4,6 +4,8 @@ const geography = require('./geography');
 const scienceQuestions = require('./scienceQuestions');
 const app = express();
 const port = 8080;
+const cors = require('cors');
+app.use(cors());
 
 app.get('/history', (req, res) => {
     res.send(history);
