@@ -6,6 +6,8 @@ const app = express();
 const port = 8080;
 const cors = require('cors');
 const nodemailer = require("nodemailer");
+const dbConnect = require('./utils/dbConnect');
+const { Contact } = require('./Models/Contact');
 
 app.use(cors());
 app.use(express.json());
@@ -51,19 +53,28 @@ app.post('/contact', (req, res) => {
       `,
     };
   
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, async(error, info) => {
       if (error) {
         console.log(error);
         res.status(500).send('Error sending email');
       } else {
+        try {
+          await Contact.create({name, email, message})
+        } catch (error) {
+          console.log("Error in Contact Query :-> ", error);
+        }
         res.status(200).send('Email sent');
       }
     });
+
   });
 
 app.use("*", (req, res) => {
     res.send("Error 404: Page not found");
 });
+
+dbConnect();
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 })
